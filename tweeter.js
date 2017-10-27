@@ -12,7 +12,7 @@ let pid = 1 * fs.readFileSync(pidFile, { encoding: 'utf8' }).trim();
 let new_pid;
 
 function createIntervalValue() {
-  return 2 * (40 + Math.floor(40 * Math.random())) * 60 * 1000; // tweet about every 2 hours.
+  return 4 * (40 + Math.floor(60 * Math.random())) * 60 * 1000; // tweet about every 5 hours.
 }
 
 let interval = createIntervalValue();
