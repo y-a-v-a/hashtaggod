@@ -1,3 +1,4 @@
+'use strict';
 const fs = require('fs');
 const Twitter = require('twitter');
 const config = require('./config');
