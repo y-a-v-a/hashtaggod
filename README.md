@@ -1,6 +1,6 @@
 # hashtaggod
 
-2017 (c) ax710.org and y-a-v-a.org
+2017-2021 (c) ax710.org and y-a-v-a.org
 
 This bot will post the whole bible (The King James Bible as taken from The Project Gutenberg, version March 2, 2011) hash-tagged. It's main webpage is https://twitter.com/_hashtag_god
 
