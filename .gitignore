@@ -2,4 +2,4 @@ node_modules
 *.txt
 config.js
 .env
-hashtag-bible.txt.zip
+_data

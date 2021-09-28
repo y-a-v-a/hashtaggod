@@ -1,15 +1,19 @@
 {
   "name": "hashtaggod",
-  "version": "1.0.0",
-  "description": "",
+  "version": "2.0.0",
+  "description": "Hashtaggod is a twitter bot",
   "main": "index.js",
   "scripts": {
-    "start": "node tweeter.js"
+    "start": "DEBUG=* node index.js"
   },
-  "author": "",
+  "author": "Vincent Bruijn <vebruijn@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@koa/router": "^10.1.1",
+    "aws-sdk": "^2.996.0",
+    "debug": "^4.3.2",
     "dotenv": "^10.0.0",
+    "koa": "^2.13.3",
     "twitter": "^1.7.1"
   }
 }

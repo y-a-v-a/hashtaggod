@@ -1,42 +1,50 @@
+require('dotenv').config();
+const Koa = require('koa');
+const Router = require('@koa/router');
 const fs = require('fs');
+const { getDynamoDBClient } = require('./src/aws');
+const debug = require('debug')('hashtaggod:koa');
+const initializeTweeter = require('./src/tweeter');
 
-function a() {
-  let txt = fs.readFileSync('./bible.txt', {encoding: 'utf8'});
+const app = new Koa();
+const router = new Router();
 
-  let result = txt.replace(/[\s]+/g, ' ');
-  fs.writeFileSync('./test3.txt', result);
+let tweets;
+try {
+  tweets = JSON.parse(fs.readFileSync('./src/tweets.json', 'utf8'));
+} catch (error) {
+  debug(error.message);
 }
 
-function b() {
-  let txt = fs.readFileSync('./test3.txt', {encoding: 'utf8'});
+const params = {
+  TableName: 'hashtaggod',
+  Key: {
+    id: { S: process.env.HASHTAGGOD_KEY },
+  },
+};
 
-  let result = txt.replace(/((.|\s){0,140}[^\w#\.,:;\(\)\?\!\'])/g, '$1\n\n');
+router.get('/', async (ctx, next) => {
+  const client = getDynamoDBClient();
+  await next();
+  debug('Process request');
+  try {
+    const item = await client.getItem(params).promise();
+    const pid = item?.Item?.pid?.N;
+    const tweet = (pid && tweets[pid]) || 'not found';
+    const lastTweet = (pid && tweets[pid - 1]) || 'not found';
 
-  fs.writeFileSync('./test.txt', result);
-}
+    ctx.body = JSON.stringify({ pid, tweet, lastTweet });
+  } catch (error) {
+    debug(error.message);
+    ctx.status = 500;
+    ctx.body = 'Internal server error';
+  }
+});
 
-function c() {
-  let txt2 = fs.readFileSync('./test.txt', {encoding: 'utf8'});
+app.use(router.routes()).use(router.allowedMethods());
 
-  let lines = txt2.split('\n\n');
-  console.log(lines.length);
+app.listen(process.env.PORT);
+debug(`Koa running on port ${process.env.PORT}`);
 
-  let result = lines.map(function(el) {
-    let t = el.trim();
-
-    return t;
-  });
-
-  fs.writeFileSync('./tweets.json', JSON.stringify(result));
-}
-
-function d() {
-  let txt = fs.readFileSync('./bible3.txt', { encoding:'utf8'});
-  let result = txt.replace(/\S#/g, ' #');
-  fs.writeFileSync('./test2.txt', result);
-}
-
-// b();
-
-// a();
-c();
+debug('Initialize tweeter');
+initializeTweeter(tweets);
